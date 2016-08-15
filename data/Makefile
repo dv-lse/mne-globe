@@ -15,7 +15,7 @@ countries.json: $(COUNTRIES)/TM_WORLD_BORDERS_SIMPL-0.3.shp
 	ogr2ogr -f GeoJSON $@ $(COUNTRIES)/TM_WORLD_BORDERS_SIMPL-0.3.shp
 
 world-110m.json:
-	curl https://gist.github.com/mbostock/raw/4090846/world-110m.json > $@
+	curl https://raw.githubusercontent.com/mbostock/topojson/master/examples/world-110m.json > $@
 
 # Generate datasets using extracted ipython script
 

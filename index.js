@@ -9,12 +9,19 @@ import './css/styles.css!'
 const width = 800
 const height = 600
 
+const filter_cols = [ 'source_country_std', 'destination_country_std', 'business_activity', 'investing_company' ]
+const filter_col_labels = [ 'Source Country', 'Destination Country', 'Business Activity', 'Investing Company' ]
+const null_suffix = ' (All)'
+
+let filters = {}
+
 let rotate = null
 
 const earth_tilt = 11.5 // actual tilt is 23.4
 
-let drop_down = d3.select('body').append('div')
-  .append('select')
+let drop_downs = d3.select('body').append('div')
+  .selectAll('select')
+    .data(filter_cols)
 
 let projection = geoOrthographic()
   .scale(d3.min([width, height]) / 2 - 20)
@@ -37,7 +44,7 @@ let graticule = geoGraticule()
 
 //console.time('ajax')
 queue()
-  .defer(d3.json, 'data/world-topo.json')
+  .defer(d3.json, 'data/world-110m.json')
   .defer(d3.csv, 'data/fdi_excerpt.csv')
   .await(function(err, world, fdi) {
     if (err) return console.error(err)
@@ -49,9 +56,6 @@ queue()
 
     console.log('size: ' + fdi.length)
 
-    fdi = fdi.filter( (d) => d.source_coord_def_type !== 'missing' &&
-                             d.destination_coord_def_type !== 'missing' )
-
     fdi.forEach((d) => {
       d.source_lat_def = +d.source_lat_def
       d.source_long_def = +d.source_long_def
@@ -59,21 +63,38 @@ queue()
       d.destination_long_def = +d.destination_long_def
     })
 
+    // model
+    let source_geom = { type: "MultiLineString", coordinates: [] }
+
     // recalculate lines when source changes
 
-    let sources = d3.set(fdi, (d) => d.business_activity).values()
-    sources.sort(d3.ascending)
+    let domains = {}
+    filter_cols.forEach( (col,i ) => {
+      domains[col] = d3.set(fdi, (d) => d[col]).values()
+      domains[col].sort(d3.ascending)
+    })
 
-    drop_down.selectAll('option')
-        .data(sources)
+    drop_downs.enter().append('select')
+      .attr('class', 'filter')
+      .on('change', function(col) {
+        filters[col] = this.value.endsWith(null_suffix) ? null : this.value
+        // default: when no filters, no arcs
+        if(d3.values(filters).some((d) => d)) update_geom()
+        else source_geom.coordinates = []
+      })
+      .selectAll('option')
+        .data( (col,i) => [filter_col_labels[i] + null_suffix].concat(domains[col]))
       .enter().append('option')
         .text( (d) => d )
 
-    let source_geom = { type: "MultiLineString", coordinates: [] }
+    //console.timeEnd('postprocess')
 
-    drop_down.on('change', function() {
-      let source = this.value
-      let coords = fdi.filter( (d) => d.business_activity === source ).map( (d) => {
+    d3.interval( (elapsed) => {
+      update(countries, source_geom, elapsed * 0.01),
+      38 })
+
+    function update_geom() {
+      let coords = fdi.filter(in_filter).map( (d) => {
         let src = [d.source_long_def, d.source_lat_def]
         let dest = [d.destination_long_def, d.destination_lat_def]
 
@@ -81,13 +102,11 @@ queue()
       })
 
       source_geom.coordinates = coords
-    })
+    }
 
-    //console.timeEnd('postprocess')
-
-    d3.interval( (elapsed) => {
-      update(countries, source_geom, elapsed * 0.01),
-      38 })
+    function in_filter(d) {
+      return filter_cols.every( (col) => !filters[col] || d[col] === filters[col] )
+    }
 })
 
 function update(countries, fdis, r) {

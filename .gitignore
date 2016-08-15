@@ -1,2 +1,6 @@
 jspm_packages
 .DS_Store
+data/*.json
+data/*.csv
+data/*.py
+data/*.ipynb
