@@ -37,8 +37,8 @@ let graticule = geoGraticule()
 
 //console.time('ajax')
 queue()
-  .defer(d3.json, 'data/world-110m.json')
-  .defer(d3.csv, 'data/fdi_usa.csv')
+  .defer(d3.json, 'data/world-topo.json')
+  .defer(d3.csv, 'data/fdi_excerpt.csv')
   .await(function(err, world, fdi) {
     if (err) return console.error(err)
 
@@ -61,7 +61,7 @@ queue()
 
     // recalculate lines when source changes
 
-    let sources = d3.set(fdi, (d) => d.source_country_std).values()
+    let sources = d3.set(fdi, (d) => d.business_activity).values()
     sources.sort(d3.ascending)
 
     drop_down.selectAll('option')
@@ -73,7 +73,7 @@ queue()
 
     drop_down.on('change', function() {
       let source = this.value
-      let coords = fdi.filter( (d) => d.source_country_std === source ).map( (d) => {
+      let coords = fdi.filter( (d) => d.business_activity === source ).map( (d) => {
         let src = [d.source_long_def, d.source_lat_def]
         let dest = [d.destination_long_def, d.destination_lat_def]
 
