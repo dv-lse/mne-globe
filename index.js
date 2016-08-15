@@ -13,11 +13,11 @@ const filter_cols = [ 'source_country_std', 'destination_country_std', 'business
 const filter_col_labels = [ 'Source Country', 'Destination Country', 'Business Activity', 'Investing Company' ]
 const null_suffix = ' (All)'
 
+const timeout = 5000
+
 const fdis_size_fmt = d3.format(',')
 
 let filters = {}
-
-let rotate = null
 
 const earth_tilt = 11.5 // actual tilt is 23.4
 
@@ -30,6 +30,7 @@ let projection = geoOrthographic()
   .translate([width / 2, height / 2])
   .clipAngle(90)
   .precision(0.6)
+  .rotate([0, 0, earth_tilt])
 
 let canvas = d3.select('body').append('canvas')
   .attr('width', width)
@@ -43,6 +44,33 @@ let path = geoPath()
   .pointRadius(2)
 
 let graticule = geoGraticule()
+
+let m0, o0, m1
+let o1 = [0,0]
+
+let elapsed = null
+let rotator = d3.interval((epoch_step) => {
+  let step = !elapsed ? epoch_step : Math.max(0, d3.now() - elapsed - timeout)
+  projection.rotate([-o1[0] + step * 0.01, -o1[1], earth_tilt])
+}, 38)
+
+// See from http://mbostock.github.io/d3/talk/20111018/azimuthal.html
+
+canvas.call(d3.drag()
+  .on('start', () => {
+    let proj = projection.rotate()
+    m0 = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY]
+    o0 = [-proj[0],-proj[1]]
+  })
+  .on('drag', () => {
+    if (m0) {
+      m1 = [d3.event.sourceEvent.pageX, d3.event.sourceEvent.pageY]
+      o1 = [o0[0] + (m0[0] - m1[0]) / 4, o0[1] + (m1[1] - m0[1]) / 4]
+      projection.rotate([-o1[0], -o1[1], earth_tilt])
+      elapsed = d3.now()
+    }
+  }))
+
 
 //console.time('ajax')
 queue()
@@ -90,7 +118,7 @@ queue()
     //console.timeEnd('postprocess')
 
     d3.interval( (elapsed) => {
-      update(countries, source_geom, elapsed * 0.01),
+      update(countries, source_geom, elapsed),
       38 })
 
     function update_geom() {
@@ -106,12 +134,9 @@ queue()
     }
 })
 
-function update(countries, fdis, r) {
-  projection.rotate([rotate || r, 0, earth_tilt])
+function update(countries, fdis, elapsed) {
 
   context.clearRect(0, 0, width, height)
-
-  canvas.on('click', () => rotate = (!rotate && r))
 
   //console.time('sphere')
   context.save()
@@ -136,7 +161,7 @@ function update(countries, fdis, r) {
   context.restore()
   //console.timeEnd('countries')
 
-  let percent = (r * 10 % 100) / 100.0
+  let percent = (elapsed % 100) / 100.0
   const dashes = [5,10]
   const dashes_total = dashes.reduce( (a,b) => a+b )
 
