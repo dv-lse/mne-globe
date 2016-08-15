@@ -2,12 +2,12 @@
 
   [ ] - globe needs to be manipulable
   [ ] - rotate after 30 secs inactivity
-  [ ] - load spinner, or make dataset smaller
+  [x] - load spinner, or make dataset smaller
   [ ] - rotate to average center of links on selection
 
   [ ] - need social filter + patents filters?
 
-  [ ] - filters: business_activity, investing_company,
+  [x] - filters: business_activity, investing_company,
                  source_country_std, dest_country_std
 
 

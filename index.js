@@ -13,6 +13,8 @@ const filter_cols = [ 'source_country_std', 'destination_country_std', 'business
 const filter_col_labels = [ 'Source Country', 'Destination Country', 'Business Activity', 'Investing Company' ]
 const null_suffix = ' (All)'
 
+const fdis_size_fmt = d3.format(',')
+
 let filters = {}
 
 let rotate = null
@@ -78,9 +80,7 @@ queue()
       .attr('class', 'filter')
       .on('change', function(col) {
         filters[col] = this.value.endsWith(null_suffix) ? null : this.value
-        // default: when no filters, no arcs
-        if(d3.values(filters).some((d) => d)) update_geom()
-        else source_geom.coordinates = []
+        update_geom()
       })
       .selectAll('option')
         .data( (col,i) => [filter_col_labels[i] + null_suffix].concat(domains[col]))
@@ -94,6 +94,7 @@ queue()
       38 })
 
     function update_geom() {
+      let in_filter = (d) => filter_cols.every( (col) => !filters[col] || d[col] === filters[col] )
       let coords = fdi.filter(in_filter).map( (d) => {
         let src = [d.source_long_def, d.source_lat_def]
         let dest = [d.destination_long_def, d.destination_lat_def]
@@ -102,10 +103,6 @@ queue()
       })
 
       source_geom.coordinates = coords
-    }
-
-    function in_filter(d) {
-      return filter_cols.every( (col) => !filters[col] || d[col] === filters[col] )
     }
 })
 
@@ -154,4 +151,13 @@ function update(countries, fdis, r) {
   context.stroke()
   context.restore()
   //console.timeEnd('fdis')
+
+  let info = fdis_size_fmt(fdis.coordinates.length) + ' matching FDIs'
+
+  // info label
+  context.save()
+  context.font = "17px serif";
+  context.fillStyle = 'gray'
+  context.fillText(info, 20, 20)
+  context.restore()
 }
