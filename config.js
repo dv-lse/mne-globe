@@ -20,6 +20,7 @@ System.config({
     "css": "github:systemjs/plugin-css@0.1.26",
     "d3": "npm:d3@4.2.1",
     "d3-geo": "npm:d3-geo@1.2.2",
+    "d3-geo-projection": "npm:d3-geo-projection@1.0.3",
     "d3-queue": "npm:d3-queue@3.0.2",
     "d3-selection": "npm:d3-selection@1.0.1",
     "eslint": "npm:eslint@3.2.2",
@@ -54,7 +55,7 @@ System.config({
       "path-browserify": "npm:path-browserify@0.0.0"
     },
     "github:jspm/nodelibs-process@0.1.2": {
-      "process": "npm:process@0.11.7"
+      "process": "npm:process@0.11.8"
     },
     "github:jspm/nodelibs-stream@0.1.0": {
       "stream-browserify": "npm:stream-browserify@1.0.0"
@@ -215,6 +216,10 @@ System.config({
       "brfs": "npm:brfs@1.4.3",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0"
+    },
+    "npm:d3-geo-projection@1.0.3": {
+      "d3-array": "npm:d3-array@1.0.1",
+      "d3-geo": "npm:d3-geo@1.2.2"
     },
     "npm:d3-geo@1.2.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
@@ -671,7 +676,7 @@ System.config({
     "npm:process-nextick-args@1.0.7": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:process@0.11.7": {
+    "npm:process@0.11.8": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"

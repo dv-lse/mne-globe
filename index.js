@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { geoOrthographic, geoPath, geoGraticule, geoInterpolate } from 'd3-geo'
+import { geoPath, geoGraticule, geoOrthographic } from 'd3-geo'
 import { feature } from 'topojson'
 import { queue } from 'd3-queue'
 
@@ -9,7 +9,12 @@ import './css/styles.css!'
 const width = 800
 const height = 600
 
+let rotate = null
+
 const earth_tilt = 11.5 // actual tilt is 23.4
+
+let drop_down = d3.select('body').append('div')
+  .append('select')
 
 let projection = geoOrthographic()
   .scale(d3.min([width, height]) / 2 - 20)
@@ -30,19 +35,22 @@ let path = geoPath()
 
 let graticule = geoGraticule()
 
-console.time('ajax')
+//console.time('ajax')
 queue()
   .defer(d3.json, 'data/world-110m.json')
   .defer(d3.csv, 'data/fdi_usa.csv')
   .await(function(err, world, fdi) {
     if (err) return console.error(err)
 
-    console.timeEnd('ajax')
+    //console.timeEnd('ajax')
 
-    console.time('postprocess')
+    //console.time('postprocess')
     let countries = feature(world, world.objects.countries)
 
-    fdi = fdi.filter( (d) => d.investing_company === 'Microsoft' )
+    console.log('size: ' + fdi.length)
+
+    fdi = fdi.filter( (d) => d.source_coord_def_type !== 'missing' &&
+                             d.destination_coord_def_type !== 'missing' )
 
     fdi.forEach((d) => {
       d.source_lat_def = +d.source_lat_def
@@ -50,54 +58,81 @@ queue()
       d.destination_lat_def = +d.destination_lat_def
       d.destination_long_def = +d.destination_long_def
     })
-    console.timeEnd('postprocess')
 
-    let start = d3.now()
-    d3.interval( (elapsed) => update(countries, fdi, (elapsed - start) * 0.01), 38 )
+    // recalculate lines when source changes
+
+    let sources = d3.set(fdi, (d) => d.source_country_std).values()
+    sources.sort(d3.ascending)
+
+    drop_down.selectAll('option')
+        .data(sources)
+      .enter().append('option')
+        .text( (d) => d )
+
+    let source_geom = { type: "MultiLineString", coordinates: [] }
+
+    drop_down.on('change', function() {
+      let source = this.value
+      let coords = fdi.filter( (d) => d.source_country_std === source ).map( (d) => {
+        let src = [d.source_long_def, d.source_lat_def]
+        let dest = [d.destination_long_def, d.destination_lat_def]
+
+        return [src, dest]
+      })
+
+      source_geom.coordinates = coords
+    })
+
+    //console.timeEnd('postprocess')
+
+    d3.interval( (elapsed) => {
+      update(countries, source_geom, elapsed * 0.01),
+      38 })
 })
 
-function update(countries, fdi, r) {
-  projection.rotate([r, 0, earth_tilt])
+function update(countries, fdis, r) {
+  projection.rotate([rotate || r, 0, earth_tilt])
 
   context.clearRect(0, 0, width, height)
 
-  console.time('sphere')
+  canvas.on('click', () => rotate = (!rotate && r))
+
+  //console.time('sphere')
   context.save()
-  context.beginPath()
   context.lineWidth = 1
   context.setLineDash([1, 3])
   context.strokeStyle = '#c9c4bc'
+  context.beginPath()
   path( graticule() )
   context.stroke()
   context.restore()
-  console.timeEnd('sphere')
+  //console.timeEnd('sphere')
 
-  console.time('countries')
+  //console.time('countries')
   context.save()
-  context.beginPath()
   context.lineWidth = 1
   context.strokeStyle = 'gray'
-  context.fillStyle = 'white'
+  context.fillStyle = 'lightgray'
+  context.beginPath()
   path(countries)
   context.fill()
   context.stroke()
   context.restore()
-  console.timeEnd('countries')
+  //console.timeEnd('countries')
 
-  let percent = (r % 50) / 50
+  let percent = (r * 10 % 100) / 100.0
+  const dashes = [5,10]
+  const dashes_total = dashes.reduce( (a,b) => a+b )
 
-  console.time('fdis')
+  //console.time('fdis')
   context.save()
-  context.lineWidth = 1.5
-  context.strokeStyle = 'red'
+  context.lineWidth = 1
+  context.strokeStyle = 'rgba(0,200,200,0.7)'
+  context.setLineDash(dashes)
+  context.lineDashOffset = -percent * dashes_total
   context.beginPath()
-  fdi.forEach( (d) => {
-    let coords = [[d.source_long_def, d.source_lat_def], [d.destination_long_def, d.destination_lat_def]]
-    let i = geoInterpolate(coords[0], coords[1])
-    path({ type: "LineString", coordinates: coords})
-    path({ type: "Point", coordinates: i(percent) })
-  })
+  path(fdis)
   context.stroke()
   context.restore()
-  console.timeEnd('fdis')
+  //console.timeEnd('fdis')
 }
