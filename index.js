@@ -36,12 +36,8 @@ let canvas = d3.select('body').append('canvas')
   .attr('width', width)
   .attr('height', height)
 
-let context = canvas.node().getContext('2d')
-
 let path = geoPath()
   .projection(projection)
-  .context(context)
-  .pointRadius(2)
 
 let graticule = geoGraticule()
 
@@ -135,6 +131,8 @@ queue()
 })
 
 function update(countries, fdis, elapsed) {
+  let context = canvas.node().getContext('2d')
+  path.context(context)
 
   context.clearRect(0, 0, width, height)
 
