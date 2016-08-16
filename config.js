@@ -1,5 +1,5 @@
 System.config({
-  baseURL: "/",
+  baseURL: "/mne-globe",
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {

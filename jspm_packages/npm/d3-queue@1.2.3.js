@@ -1,0 +1,1 @@
+module.exports = require("npm:d3-queue@1.2.3/build/queue.js");

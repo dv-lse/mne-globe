@@ -1,0 +1,1 @@
+module.exports = require("npm:iconv-lite@0.2.11/index.js");

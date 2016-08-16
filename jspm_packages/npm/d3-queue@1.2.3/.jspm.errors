@@ -1,0 +1,44 @@
+MultipleErrors: /Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:1: Unexpected reserved word import
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:8: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:14: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:19: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:56: Unexpected reserved word export
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:63: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:63: Unexpected reserved word default
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/build/bundle.js:1:71: Semi-colon expected
+
+MultipleErrors: /Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/array.js:1:1: Unexpected reserved word export
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/array.js:1:8: Semi-colon expected
+
+MultipleErrors: /Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:1:1: Unexpected reserved word export
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:1:8: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:1:8: Unexpected reserved word default
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:1:16: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:1:24: Unexpected token (
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:1:25: Unexpected token )
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:2:1: Unexpected token End of File
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:2:1: Unexpected token End of File
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/noop.js:2:1: Unexpected token End of File
+
+MultipleErrors: /Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:1:1: Unexpected reserved word import
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:1:8: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:1:21: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:2:1: Unexpected reserved word import
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:2:8: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:2:13: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:2:18: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:101:1: Unexpected reserved word export
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:101:8: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:101:8: Unexpected reserved word default
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:101:16: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:101:24: Unexpected token (
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/src/queue.js:101:25: Unexpected token concurrency
+
+MultipleErrors: /Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:1:1: Unexpected reserved word import
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:1:8: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:1:14: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:1:19: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:3:1: Unexpected reserved word export
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:3:8: Semi-colon expected
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:3:8: Unexpected reserved word default
+/Users/yorkc/.jspm/packages/npm/d3-queue@1.2.3/index.js:3:16: Semi-colon expected

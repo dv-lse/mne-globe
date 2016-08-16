@@ -3,9 +3,9 @@
 data/*.py
 data/*.ipynb
 # build products required in distribution (gh-pages branch):
-jspm_packages
-node_modules
-data/*.json
-data/*.csv
-bundle.js
-bundle.js.map
+# jspm_packages
+# node_modules
+# data/*.json
+# data/*.csv
+# bundle.js
+# bundle.js.map
